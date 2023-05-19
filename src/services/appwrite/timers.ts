@@ -10,9 +10,7 @@ export interface Timer {
 }
 
 export async function listTimers(sessionId: string) {
-  return await databases.listDocuments<Timer[]>(TIMERS_DATABASE_ID, sessionId, [
-    "*",
-  ]);
+  return await databases.listDocuments<Timer[]>(TIMERS_DATABASE_ID, sessionId);
 }
 
 export async function createTimer(sessionId: string, timer: Omit<Timer, "id">) {
