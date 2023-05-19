@@ -1,6 +1,9 @@
 {
-	"compilerOptions": {
-		"jsx": "preserve",
-		"jsxImportSource": "solid-js"
-	}
+  "compilerOptions": {
+    "module": "ESNext",
+    "moduleResolution": "nodenext",
+    "jsx": "preserve",
+    "jsxImportSource": "solid-js",
+    "lib": ["DOM", "ESNext"]
+  }
 }
