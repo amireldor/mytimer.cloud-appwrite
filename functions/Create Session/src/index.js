@@ -1,4 +1,5 @@
 const sdk = require("node-appwrite");
+const { nanoid } = require("nanoid");
 
 /*
   'req' variable has:
@@ -33,30 +34,32 @@ module.exports = async function (req, res) {
 
   try {
     // TODO: how to read from project's `.env`
-    const DATABASE_ID = "6467da4fb14c66daa55a";
-    const { sessionId } = JSON.parse(req.payload);
-    console.log(`sessionId in payload: ${sessionId}`);
-    if (!sessionId) {
-      throw new Error("sessionId is required");
-    }
-    console.log("Checking for existing collection");
-    const response = await databases.listCollections(
-      DATABASE_ID,
-      undefined,
-      sessionId
-    );
-    if (response.total > 0) {
-      console.log("Collection already exists");
-      res.json({
-        ok: true,
-      });
-      return;
-    }
-    console.log("Trying to create collection");
+    const DATABASE_ID = req.variables["TIMERS_DATABASE_ID"];
+    // const { sessionId } = JSON.parse(req.payload);
+    // console.log(`sessionId in payload: ${sessionId}`);
+    // if (!sessionId) {
+    //   throw new Error("sessionId is required");
+    // }
+    // console.log("Checking for existing collection");
+    // const response = await databases.listCollections(
+    //   DATABASE_ID,
+    //   undefined,
+    //   sessionId
+    // );
+    // if (response.total > 0) {
+    //   console.log("Collection already exists");
+    //   res.json({
+    //     ok: true,
+    //   });
+    //   return;
+    // }
+    const sessionId = nanoid();
+    console.log(`Trying to create session ${sessionId}`);
     await databases.createCollection(DATABASE_ID, sessionId, sessionId);
     console.log("OK!");
     res.json({
       ok: true,
+      sessionId,
     });
   } catch (error) {
     console.error("error:", error);

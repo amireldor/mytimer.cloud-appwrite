@@ -34,7 +34,6 @@
   },
   "dependencies": {
     "appwrite": "^11.0.0",
-    "nanoid": "^4.0.2",
     "solid-js": "^1.7.5"
   },
   "engines": {

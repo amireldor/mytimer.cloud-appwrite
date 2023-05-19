@@ -4,9 +4,9 @@
   "functions": [
     {
       "$id": "6467e461c96b190e126f",
-      "name": "Ensure Session",
+      "name": "Create Session",
       "runtime": "node-16.0",
-      "path": "functions/Ensure Session",
+      "path": "functions/Create Session",
       "entrypoint": "src/index.js",
       "ignore": ["node_modules", ".npm"],
       "execute": ["any"],
