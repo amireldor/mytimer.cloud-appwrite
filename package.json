@@ -1,0 +1,37 @@
+{
+  "name": "mytimer.cloud-appwrite",
+  "version": "1.0.0",
+  "description": "Timers and stopwatches... in the cloud? Yes pls!",
+  "main": "build/index.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "test": "vitest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/amireldor/mytimer.cloud-appwrite.git"
+  },
+  "author": "Amir Eldor <amir@eldor.dev>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/amireldor/mytimer.cloud-appwrite/issues"
+  },
+  "homepage": "https://github.com/amireldor/mytimer.cloud-appwrite#readme",
+  "devDependencies": {
+    "autoprefixer": "^10.4.14",
+    "postcss": "^8.4.23",
+    "tailwindcss": "^3.3.2",
+    "typescript": "^5.0.2",
+    "vite": "^4.3.8",
+    "vite-plugin-solid": "^2.7.0"
+  },
+  "dependencies": {
+    "solid-js": "^1.7.5"
+  },
+  "engines": {
+    "node": ">=20.2.0",
+    "npm": ">=9.6.6"
+  }
+}
