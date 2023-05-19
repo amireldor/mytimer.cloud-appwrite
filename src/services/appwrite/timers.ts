@@ -1,5 +1,6 @@
 import { ID } from "appwrite";
 import { databases } from "./appwrite.js";
+import { ErrorBoundary } from "solid-js";
 
 export const TIMERS_DATABASE_ID = import.meta.env
   .VITE_APPWRITE_TIMERS_DATABASE_ID;
@@ -7,6 +8,8 @@ export const TIMERS_DATABASE_ID = import.meta.env
 export interface Timer {
   id: string;
   title: string;
+  created: Date;
+  stopwatch: boolean;
 }
 
 export async function listTimers(sessionId: string) {

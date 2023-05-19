@@ -1,15 +1,25 @@
-import { Component, createSignal, onMount } from "solid-js";
+import {
+  Component,
+  For,
+  Suspense,
+  createResource,
+  createSignal,
+  onMount,
+} from "solid-js";
 import { getSessionIdFromURL, startNewSession } from "./services/session.js";
 import { Timer, createTimer, listTimers } from "./services/appwrite/timers.js";
 
 export const App: Component = () => {
   const [sessionId, setSessionId] = createSignal<string | null>(null);
-  const [timers, setTimers] = createSignal<Timer[]>([]);
+  const [timers] = createResource<Timer[], string>(sessionId, async () => {
+    if (sessionId()) {
+      return await listTimers(sessionId());
+    }
+    return [];
+  });
 
   onMount(async () => {
     setSessionId(getSessionIdFromURL() ?? (await startNewSession()));
-    setTimers(await listTimers(sessionId()));
-    console.log("timers", timers());
   });
 
   return (
@@ -26,6 +36,9 @@ export const App: Component = () => {
       >
         clicky
       </button>
+      <Suspense fallback={<span>Loading timers</span>}>
+        <For each={timers()}>{(timer) => <span>{timer.id}</span>}</For>
+      </Suspense>
     </div>
   );
 };

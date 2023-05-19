@@ -42,6 +42,21 @@ module.exports = async function (req, res) {
       sdk.Permission.update(sdk.Role.any()),
       sdk.Permission.delete(sdk.Role.any()),
     ]);
+    await databases.createStringAttribute(
+      DATABASE_ID,
+      sessionId,
+      "title",
+      "128",
+      true,
+      "My Timer"
+    );
+    await databases.createBooleanAttribute(
+      DATABASE_ID,
+      sessionId,
+      "stopwatch",
+      true,
+      false
+    );
     console.log("OK!");
     res.json({
       ok: true,
