@@ -48,10 +48,27 @@ export const TimerInput: Component<{
         type="text"
         placeholder="type numbers"
         value={valueToShow()}
-        onKeyPress={(event) => {
+        onKeyDown={(event) => {
           event.preventDefault();
+          // TODO: code can be more readable
           if (event.key === "Enter") {
             startTimerFromInput();
+            return;
+          }
+          if (event.key === "Backspace") {
+            setValue(value().slice(0, -1));
+            return;
+          }
+          if (event.key === "Escape") {
+            setValue("");
+            return;
+          }
+          if (event.key === ":") {
+            if (value().length % 2 === 1) {
+              const val = value();
+              setValue(val.slice(0, -1) + "0" + val[val.length - 1]);
+            }
+            return;
           }
           const asNumber = Number.parseInt(event.key);
           if (Number.isNaN(asNumber)) {
@@ -66,12 +83,18 @@ export const TimerInput: Component<{
             setValue(value().slice(shouldTrim ? 1 : 0) + event.key);
           }
         }}
+        onBlur={() => setValue("")}
       />
 
-      <button disabled={!value()} onClick={() => startTimerFromInput()}>
+      <button
+        class="bg-primary"
+        disabled={!value()}
+        onClick={() => startTimerFromInput()}
+      >
         Add timer
       </button>
       <button
+        class="bg-primary"
         onClick={() => {
           props.onCreateTimer({
             countUp: true,
