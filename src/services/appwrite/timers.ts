@@ -1,22 +1,24 @@
-import { ID } from "appwrite";
+import { ID, Models } from "appwrite";
 import { databases } from "./appwrite.js";
-import { ErrorBoundary } from "solid-js";
 
 export const TIMERS_DATABASE_ID = import.meta.env
   .VITE_APPWRITE_TIMERS_DATABASE_ID;
 
-export interface Timer {
-  id: string;
+export interface Timer extends Models.Document {
   title: string;
-  created: Date;
-  stopwatch: boolean;
+  timestamp: Date;
+  countUp: boolean;
 }
 
 export async function listTimers(sessionId: string) {
-  return await databases.listDocuments<Timer[]>(TIMERS_DATABASE_ID, sessionId);
+  const response = await databases.listDocuments<Timer[]>(
+    TIMERS_DATABASE_ID,
+    sessionId
+  );
+  return response.documents;
 }
 
-export async function createTimer(sessionId: string, timer: Omit<Timer, "id">) {
+export async function createTimer(sessionId: string, timer: Timer) {
   return await databases.createDocument<Timer>(
     TIMERS_DATABASE_ID,
     sessionId,

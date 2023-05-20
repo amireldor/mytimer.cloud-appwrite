@@ -36,34 +36,42 @@ module.exports = async function (req, res) {
     const DATABASE_ID = req.variables["TIMERS_DATABASE_ID"];
     const sessionId = nanoid();
     console.log(`Trying to create session ${sessionId}`);
+    // TODO: refactor for readability
     await databases.createCollection(DATABASE_ID, sessionId, sessionId, [
       sdk.Permission.create(sdk.Role.any()),
       sdk.Permission.read(sdk.Role.any()),
       sdk.Permission.update(sdk.Role.any()),
       sdk.Permission.delete(sdk.Role.any()),
     ]);
-    await databases.createStringAttribute(
-      DATABASE_ID,
-      sessionId,
-      "title",
-      "128",
-      true,
-      "My Timer"
-    );
-    await databases.createBooleanAttribute(
-      DATABASE_ID,
-      sessionId,
-      "stopwatch",
-      true,
-      false
-    );
+    console.log("Creating attributes");
+    await Promise.all([
+      await databases.createStringAttribute(
+        DATABASE_ID,
+        sessionId,
+        "title",
+        "128",
+        false
+      ),
+      await databases.createDatetimeAttribute(
+        DATABASE_ID,
+        sessionId,
+        "timestamp",
+        true
+      ),
+      await databases.createBooleanAttribute(
+        DATABASE_ID,
+        sessionId,
+        "countUp",
+        true
+      ),
+    ]);
     console.log("OK!");
     res.json({
       ok: true,
       sessionId,
     });
   } catch (error) {
-    console.error("error:", error);
+    console.log("error:", error);
     res.json(
       {
         ok: false,
