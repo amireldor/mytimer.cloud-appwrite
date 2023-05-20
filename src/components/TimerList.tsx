@@ -20,10 +20,8 @@ export const TimerList: Component<{ timers: TimerType[] }> = (props) => {
   });
 
   return (
-    <Suspense fallback={<span>Loading timers</span>}>
-      <For each={props.timers}>
-        {(timer) => <Timer timer={timer} tick={tick()} />}
-      </For>
-    </Suspense>
+    <For each={props.timers}>
+      {(timer) => <Timer timer={timer} tick={tick()} />}
+    </For>
   );
 };
