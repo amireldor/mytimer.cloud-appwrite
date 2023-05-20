@@ -1,5 +1,8 @@
 import { Component, createEffect, createSignal } from "solid-js";
-import { Timer as TimerType } from "../services/appwrite/timers.js";
+import {
+  Timer as TimerType,
+  deleteTimer,
+} from "../services/appwrite/timers.js";
 import { intervalToDuration, isBefore } from "date-fns";
 import { formatTime } from "./formatters.js";
 import { ConfirmButton } from "./ConfirmButton.jsx";
@@ -8,6 +11,7 @@ import { ButtonList } from "./ButtonList.jsx";
 export interface Props {
   timer: TimerType;
   tick: number;
+  onDelete: () => void;
 }
 
 export const Timer: Component<Props> = (props) => {
@@ -50,7 +54,13 @@ export const Timer: Component<Props> = (props) => {
               <button class="bg-neutral" onClick={next}>
                 cancel
               </button>
-              <button class="bg-error" onClick={() => next()}>
+              <button
+                class="bg-error"
+                onClick={() => {
+                  props.onDelete();
+                  next();
+                }}
+              >
                 delete timer?
               </button>
             </ButtonList>

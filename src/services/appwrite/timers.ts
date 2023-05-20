@@ -61,3 +61,7 @@ export async function clearTimers(sessionId: string): Promise<void> {
     throw new Error("Failed to clear timers");
   }
 }
+
+export async function deleteTimer(sessionId, timerId: string): Promise<void> {
+  return await databases.deleteDocument(TIMERS_DATABASE_ID, sessionId, timerId);
+}

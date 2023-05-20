@@ -13,6 +13,7 @@ import {
   createTimer,
   clearTimers,
   subscribeToTimers,
+  deleteTimer,
 } from "./services/appwrite/timers.js";
 import { BASE_URL } from "./config.js";
 import { TimerList } from "./components/TimerList.jsx";
@@ -101,7 +102,21 @@ export const App: Component = () => {
         />
       </ButtonList>
       <Suspense fallback={<span>loading timers</span>}>
-        <TimerList timers={timers() ?? firstTimers()} />
+        <TimerList
+          timers={timers() ?? firstTimers()}
+          onDeleteTimer={async ($tid) => {
+            const index = timers().findIndex((t) => t.$id === $tid);
+            const timerToBeDeleted = timers()[index];
+            try {
+              setTimers(timers().filter((t) => t.$id !== $tid));
+              await deleteTimer(sessionId(), $tid);
+            } catch (error) {
+              const reverted = timers();
+              reverted.splice(index, 0, timerToBeDeleted);
+              setTimers([...reverted]);
+            }
+          }}
+        />
       </Suspense>
     </div>
   );
