@@ -1,4 +1,4 @@
-import { ID, Models } from "appwrite";
+import { ID, Models, Query } from "appwrite";
 import { databases } from "./appwrite.js";
 
 export const TIMERS_DATABASE_ID = import.meta.env
@@ -13,7 +13,8 @@ export interface Timer extends Models.Document {
 export async function listTimers(sessionId: string) {
   const response = await databases.listDocuments<Timer[]>(
     TIMERS_DATABASE_ID,
-    sessionId
+    sessionId,
+    [Query.limit(100)]
   );
   return response.documents;
 }
