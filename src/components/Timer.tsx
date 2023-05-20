@@ -37,7 +37,9 @@ export const Timer: Component<Props> = (props) => {
 
   return (
     <div classList={{ "text-green-500": timerCompleted() }}>
-      {props.timer.title?.trim() || "My Timer"} {timeText()}
+      {isTimer && isTimerRunning() && "⏳"}
+      {isTimer && !isTimerRunning() && "✅"}
+      {!isTimer && "⏱"} {props.timer.title?.trim() || "My Timer"} {timeText()}
       <ConfirmButton
         render={(askConfirmation) => {
           return <button onClick={askConfirmation}>❌</button>;

@@ -8,6 +8,7 @@ export const VITE_CLEAR_TIMERS_FUNCTION_ID = import.meta.env
   .VITE_CLEAR_TIMERS_FUNCTION_ID;
 
 export interface Timer extends Models.Document {
+  $id: string;
   title: string;
   timestamp: Date;
   countUp: boolean;

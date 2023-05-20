@@ -42,10 +42,13 @@ export const App: Component = () => {
     // TODO: add types
     const unsubscribe = subscribeToTimers(sessionId(), (timer, removed) => {
       if (!removed) {
-        setTimers(timers().concat(timer));
+        setTimers(
+          timers()
+            .filter((t) => !t.$id.startsWith("optimistic-"))
+            .concat(timer)
+        );
       } else {
         // TODO: fix type so no need to ignore
-        // @ts-ignore
         setTimers(timers().filter((t) => t.$id !== timer.$id));
       }
     });
@@ -59,8 +62,12 @@ export const App: Component = () => {
   const onCreateTimer = (timer: TimerType) => {
     start(async () => {
       try {
+        setTimers(
+          timers().concat({ ...timer, $id: `optimistic-${Math.random()}` })
+        );
         await createTimer(sessionId(), timer);
       } catch (error) {
+        setTimers(timers().filter((t) => !t.$id.startsWith("optimistic-")));
         console.error(error);
         throw error;
       }
