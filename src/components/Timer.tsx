@@ -1,8 +1,5 @@
-import { Component, JSX, createEffect, createSignal } from "solid-js";
-import {
-  Timer as TimerType,
-  deleteTimer,
-} from "../services/appwrite/timers.js";
+import { Component, JSX } from "solid-js";
+import { Timer as TimerType } from "../services/appwrite/timers.js";
 import { intervalToDuration, isBefore } from "date-fns";
 import { formatTime } from "./formatters.js";
 import { ConfirmButton } from "./ConfirmButton.jsx";

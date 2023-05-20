@@ -4,7 +4,7 @@ import { addSeconds } from "date-fns";
 import { ButtonList } from "./ButtonList.jsx";
 
 export const TimerInput: Component<{
-  onCreateTimer: (timer: TimerType) => unknown;
+  onCreateTimer: (timer: Omit<TimerType, "$id">) => unknown;
 }> = (props) => {
   const [value, setValue] = createSignal("");
 
