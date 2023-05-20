@@ -49,7 +49,7 @@ export const App: Component = () => {
       <a href={BASE_URL} class="text-5xl font-bold text-primary">
         mytimer.cloud
       </a>
-      <TimerInput onClick={onCreateTimer} />
+      <TimerInput onCreateTimer={onCreateTimer} />
       <TimerList timers={timers()} />
       {pending() && <span>loading...</span>}
     </div>

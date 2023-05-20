@@ -1,6 +1,7 @@
 import { Component, createEffect, createSignal } from "solid-js";
 import { Timer as TimerType } from "../services/appwrite/timers.js";
 import { intervalToDuration, isBefore } from "date-fns";
+import { formatTime } from "./formatters.js";
 
 export interface Props {
   timer: TimerType;
@@ -27,23 +28,7 @@ export const Timer: Component<Props> = (props) => {
     return calculateDuration();
   };
 
-  const formatTime = () => {
-    const { days, hours, minutes, seconds } = duration();
-    return (
-      [days, hours, minutes, seconds]
-        .reduce((acc, n) => {
-          if (acc.length === 0 && n === 0) {
-            return acc;
-          } else {
-            return acc.concat(n);
-          }
-        }, [])
-        .map((n, index) => n.toString().padStart(index !== 0 ? 2 : 0, "0"))
-        .join(":") || "0"
-    );
-  };
-
-  const time = () => formatTime();
+  const time = () => formatTime(duration());
 
   const isTimer = !props.timer.countUp;
   const isTimerRunning = isBefore(new Date(), new Date(props.timer.timestamp));
