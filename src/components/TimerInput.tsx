@@ -1,12 +1,13 @@
-import { Component, batch, createSignal, on } from "solid-js";
+import { Component, createSignal } from "solid-js";
 import { Timer as TimerType } from "../services/appwrite/timers.js";
-import { addSeconds, intervalToDuration, set } from "date-fns";
-import { formatTime } from "./formatters.js";
+import { addSeconds } from "date-fns";
+import { ButtonList } from "./ButtonList.jsx";
 
 export const TimerInput: Component<{
   onCreateTimer: (timer: TimerType) => unknown;
 }> = (props) => {
   const [value, setValue] = createSignal("");
+
   const valueToShow = () =>
     value()
       .split("")
@@ -14,6 +15,7 @@ export const TimerInput: Component<{
         const textToAdd = (index > 0 && index % 2 === 0 ? ":" : "") + curr;
         return textToAdd + acc;
       }, "");
+
   const seconds = () =>
     valueToShow()
       .split(":")
@@ -30,8 +32,17 @@ export const TimerInput: Component<{
         return acc + Number.parseInt(curr) * multiplier;
       }, 0);
 
+  const startTimerFromInput = () => {
+    props.onCreateTimer({
+      title: "timer",
+      timestamp: addSeconds(new Date(), seconds()),
+      countUp: false,
+    });
+    setValue("");
+  };
+
   return (
-    <div class="flex flex-wrap gap-2">
+    <ButtonList inline={false}>
       <input
         data-testid="input"
         type="text"
@@ -40,12 +51,7 @@ export const TimerInput: Component<{
         onKeyPress={(event) => {
           event.preventDefault();
           if (event.key === "Enter") {
-            props.onCreateTimer({
-              title: "timer",
-              timestamp: addSeconds(new Date(), seconds()),
-              countUp: false,
-            });
-            setValue("");
+            startTimerFromInput();
           }
           const asNumber = Number.parseInt(event.key);
           if (Number.isNaN(asNumber)) {
@@ -62,16 +68,8 @@ export const TimerInput: Component<{
         }}
       />
 
-      <button
-        onClick={() =>
-          props.onCreateTimer({
-            countUp: false,
-            timestamp: addSeconds(new Date(), 300),
-            title: "temp timer lalala",
-          })
-        }
-      >
-        temp timer input
+      <button disabled={!value()} onClick={() => startTimerFromInput()}>
+        Add timer
       </button>
       <button
         onClick={() => {
@@ -84,6 +82,6 @@ export const TimerInput: Component<{
       >
         Add stopwatch
       </button>
-    </div>
+    </ButtonList>
   );
 };

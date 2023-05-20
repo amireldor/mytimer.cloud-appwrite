@@ -8,6 +8,8 @@ export default {
         secondary: "#482121",
         third: "#7A3E3E",
         background: "#EEEEEE",
+        neutral: "#B5B5B5",
+        error: "#F44336",
       },
     },
   },

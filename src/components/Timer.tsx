@@ -3,21 +3,15 @@ import { Timer as TimerType } from "../services/appwrite/timers.js";
 import { intervalToDuration, isBefore } from "date-fns";
 import { formatTime } from "./formatters.js";
 import { ConfirmButton } from "./ConfirmButton.jsx";
+import { ButtonList } from "./ButtonList.jsx";
 
 export interface Props {
   timer: TimerType;
+  tick: number;
 }
 
-const [tick, setTick] = createSignal(0);
-
-createEffect(() => {
-  const interval = setInterval(() => {
-    setTick(tick() + 1);
-  }, 1000);
-  return () => clearInterval(interval);
-});
-
 export const Timer: Component<Props> = (props) => {
+  const tick = () => props.tick;
   const calculateDuration = () =>
     intervalToDuration({
       start: new Date(props.timer.timestamp),
@@ -50,14 +44,14 @@ export const Timer: Component<Props> = (props) => {
         }}
         renderConfirm={(next) => {
           return (
-            <div class="inline-flex flex-wrap gap-2">
-              <button class="bg-gray-500" onClick={next}>
+            <ButtonList>
+              <button class="bg-neutral" onClick={next}>
                 cancel
               </button>
-              <button class="bg-red-500" onClick={() => next()}>
+              <button class="bg-error" onClick={() => next()}>
                 delete timer?
               </button>
-            </div>
+            </ButtonList>
           );
         }}
       />

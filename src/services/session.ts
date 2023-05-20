@@ -11,21 +11,17 @@ export function getSessionIdFromURL(): string | null {
 }
 
 export async function createSession(): Promise<string> {
-  try {
-    const execution = await functions.createExecution(
-      VITE_CREATE_SESSION_FUNCTION_ID
-    );
-    const json = JSON.parse(execution.response);
-    if (!json.ok) {
-      throw new Error("Failed to create session in database");
-    }
-    if (!json.sessionId) {
-      throw new Error("Did not get a session ID when trying to create session");
-    }
-    return json.sessionId;
-  } catch (error) {
-    console.error(error);
+  const execution = await functions.createExecution(
+    VITE_CREATE_SESSION_FUNCTION_ID
+  );
+  const json = JSON.parse(execution.response);
+  if (!json.ok) {
+    throw new Error("Failed to create session in database");
   }
+  if (!json.sessionId) {
+    throw new Error("Did not get a session ID when trying to create session");
+  }
+  return json.sessionId;
 }
 
 export async function startNewSession() {

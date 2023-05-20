@@ -13,6 +13,18 @@
       "events": [],
       "schedule": "",
       "timeout": 15
+    },
+    {
+      "$id": "6468e9276069692c28d7",
+      "name": "Clear Timers",
+      "runtime": "node-16.0",
+      "path": "functions/Clear Timers",
+      "entrypoint": "src/index.js",
+      "ignore": ["node_modules", ".npm"],
+      "execute": ["any"],
+      "events": [],
+      "schedule": "",
+      "timeout": 15
     }
   ]
 }

@@ -12,9 +12,6 @@ export const ConfirmButton: Component<{
   renderConfirm: (next: () => void) => JSX.Element;
 }> = (props) => {
   const [confirming, setConfirming] = createSignal(false);
-  createEffect(() => {
-    console.log(confirming());
-  });
   return (
     <>
       {confirming()
