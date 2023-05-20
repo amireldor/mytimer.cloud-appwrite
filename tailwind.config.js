@@ -9,6 +9,7 @@ export default {
         third: "#7A3E3E",
         background: "#EEEEEE",
         neutral: "#B5B5B5",
+        success: "#4CAF50",
         error: "#F44336",
       },
     },

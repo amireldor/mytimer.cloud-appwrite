@@ -1,4 +1,4 @@
-import { Component, createEffect, createSignal } from "solid-js";
+import { Component, JSX, createEffect, createSignal } from "solid-js";
 import {
   Timer as TimerType,
   deleteTimer,
@@ -13,6 +13,10 @@ export interface Props {
   tick: number;
   onDelete: () => void;
 }
+
+const TimerStatusIcon: Component<{ children: JSX.Element }> = (props) => {
+  return <span class="inline-block animate-spin once">{props.children}</span>;
+};
 
 export const Timer: Component<Props> = (props) => {
   const tick = () => props.tick;
@@ -40,10 +44,14 @@ export const Timer: Component<Props> = (props) => {
     timerCompleted() ? `Completed ${time()} ago` : time();
 
   return (
-    <div classList={{ "text-green-500": timerCompleted() }}>
-      {isTimer && isTimerRunning() && "⏳"}
-      {isTimer && !isTimerRunning() && "✅"}
-      {!isTimer && "⏱"} {props.timer.title?.trim() || "My Timer"} {timeText()}
+    <div
+      class="transition-colors duration-1000"
+      classList={{ "text-success": timerCompleted() }}
+    >
+      {isTimer && isTimerRunning() && <TimerStatusIcon>⏳</TimerStatusIcon>}
+      {isTimer && !isTimerRunning() && <TimerStatusIcon>✅</TimerStatusIcon>}
+      {!isTimer && <TimerStatusIcon>⏱</TimerStatusIcon>}{" "}
+      {props.timer.title?.trim() || "My Timer"} {timeText()}
       <ConfirmButton
         render={(askConfirmation) => {
           return <button onClick={askConfirmation}>❌</button>;

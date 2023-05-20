@@ -13,3 +13,7 @@ button {
 button[disabled] {
   @apply opacity-50 cursor-not-allowed;
 }
+
+.once {
+  animation-iteration-count: 1;
+}
