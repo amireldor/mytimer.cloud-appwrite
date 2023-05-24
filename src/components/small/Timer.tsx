@@ -51,7 +51,11 @@ export const Timer: Component<Props> = (props) => {
       {props.timer.title?.trim() || "My Timer"} {timeText()}
       <ConfirmButton
         render={(askConfirmation) => {
-          return <button onClick={askConfirmation}>❌</button>;
+          return (
+            <button onClick={askConfirmation} aria-label="Delete timer">
+              ❌
+            </button>
+          );
         }}
         renderConfirm={(next) => {
           return (

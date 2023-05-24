@@ -22,6 +22,8 @@
   },
   "homepage": "https://github.com/amireldor/mytimer.cloud-appwrite#readme",
   "devDependencies": {
+    "@solidjs/testing-library": "^0.7.1",
+    "@testing-library/user-event": "^14.4.3",
     "autoprefixer": "^10.4.14",
     "husky": "^8.0.3",
     "jsdom": "^22.0.0",
