@@ -1,5 +1,7 @@
 import {
   Component,
+  Match,
+  Switch,
   createEffect,
   createResource,
   createSignal,
@@ -90,11 +92,18 @@ export const App: Component = () => {
         <a href={BASE_URL}>mytimer.cloud</a>
       </h1>
       <SessionContext.Provider value={{ sessionId: sessionId() }}>
-        <InputSection onCreateTimer={onCreateTimer} />
-        <BodySection
-          timers={timers() || firstTimers()}
-          onDeleteTimer={onDeleteTimer}
-        />
+        <Switch>
+          <Match when={sessionId.loading}>
+            <div>Starting your session...</div>
+          </Match>
+          <Match when={!sessionId.loading}>
+            <InputSection onCreateTimer={onCreateTimer} />
+            <BodySection
+              timers={timers() || firstTimers()}
+              onDeleteTimer={onDeleteTimer}
+            />
+          </Match>
+        </Switch>
       </SessionContext.Provider>
     </div>
   );

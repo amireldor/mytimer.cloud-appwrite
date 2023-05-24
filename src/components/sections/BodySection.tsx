@@ -8,10 +8,16 @@ export interface Props {
 }
 
 export const BodySection: Component<Props> = (props) => {
-  const merged = mergeProps({ onDeleteTimer: () => {} }, props);
+  const merged = mergeProps({ onDeleteTimer: () => {}, timers: [] }, props);
 
   return (
-    <Suspense fallback={<span>Loading...</span>}>
+    <Suspense fallback={<div>Loading timers...</div>}>
+      {merged.timers.length === 0 && (
+        <div>
+          Let's add a timer :) <div class="inline-block animate-bounce">☝</div>
+          ️
+        </div>
+      )}
       <TimerList timers={merged.timers} onDeleteTimer={merged.onDeleteTimer} />
     </Suspense>
   );
