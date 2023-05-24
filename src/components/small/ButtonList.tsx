@@ -4,7 +4,6 @@ export const ButtonList: Component<{
   inline?: boolean;
   children: JSX.Element;
 }> = (props) => {
-  // TODO: is this how you merge props?
   const merged = () => mergeProps({ inline: true }, props);
   return (
     <div

@@ -1,5 +1,5 @@
 import { Component, createSignal } from "solid-js";
-import { Timer as TimerType } from "../services/appwrite/timers.js";
+import { TimerType } from "../../services/appwrite/timers.js";
 import { addSeconds } from "date-fns";
 import { ButtonList } from "./ButtonList.jsx";
 
@@ -44,7 +44,6 @@ export const TimerInput: Component<{
   return (
     <ButtonList inline={false}>
       <input
-        data-testid="input"
         type="text"
         placeholder="type numbers"
         value={valueToShow()}
@@ -83,12 +82,11 @@ export const TimerInput: Component<{
             setValue(value().slice(shouldTrim ? 1 : 0) + event.key);
           }
         }}
-        onBlur={() => setValue("")}
       />
 
       <button
         class="bg-primary"
-        disabled={!value()}
+        disabled={!valueToShow()}
         onClick={() => startTimerFromInput()}
       >
         Add timer
