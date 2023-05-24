@@ -40,8 +40,8 @@
     "solid-js": "^1.7.5"
   },
   "engines": {
-    "node": ">=20.2.0",
-    "npm": ">=9.6.6"
+    "node": ">=18.14.0",
+    "npm": ">=9.5.0"
   },
   "lint-staged": {
     "**/*": "prettier --write --ignore-unknown"

@@ -1,6 +1,6 @@
 import { Component, For, createEffect, createSignal } from "solid-js";
 import { Timer } from "./Timer.jsx";
-import { Timer as TimerType } from "../services/appwrite/timers.js";
+import { TimerType } from "../../services/appwrite/timers.js";
 
 export const TimerList: Component<{
   timers: TimerType[];

@@ -1,9 +1,16 @@
+import { createContext, useContext } from "solid-js";
 import { functions } from "./appwrite/appwrite.js";
 
 const SESSION_PARAM_NAME = "session_id";
 
 export const VITE_CREATE_SESSION_FUNCTION_ID = import.meta.env
   .VITE_CREATE_SESSION_FUNCTION_ID;
+
+export const SessionContext = createContext<{ sessionId: string }>();
+
+export const useSession = () => {
+  return useContext(SessionContext);
+};
 
 export function getSessionIdFromURL(): string | null {
   const params = new URLSearchParams(window.location.search);

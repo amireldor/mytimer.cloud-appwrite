@@ -7,15 +7,15 @@ export const TIMERS_DATABASE_ID = import.meta.env
 export const VITE_CLEAR_TIMERS_FUNCTION_ID = import.meta.env
   .VITE_CLEAR_TIMERS_FUNCTION_ID;
 
-export interface Timer extends Models.Document {
+export interface TimerType extends Models.Document {
   $id: string;
   title: string;
   timestamp: Date;
   countUp: boolean;
 }
 
-export async function listTimers(sessionId: string): Promise<Timer[]> {
-  const response = await databases.listDocuments<Timer[]>(
+export async function listTimers(sessionId: string): Promise<TimerType[]> {
+  const response = await databases.listDocuments<TimerType[]>(
     TIMERS_DATABASE_ID,
     sessionId,
     [Query.limit(100)]
@@ -26,7 +26,7 @@ export async function listTimers(sessionId: string): Promise<Timer[]> {
 export function subscribeToTimers(
   sessionId: string,
   // TODO: add types
-  cb: (timer: Timer, removed: boolean) => void
+  cb: (timer: TimerType, removed: boolean) => void
 ) {
   return client.subscribe(
     `databases.${TIMERS_DATABASE_ID}.collections.${sessionId}.documents`,
@@ -41,9 +41,9 @@ export function subscribeToTimers(
 
 export async function createTimer(
   sessionId: string,
-  timer: Timer
-): Promise<Timer> {
-  return await databases.createDocument<Timer>(
+  timer: TimerType
+): Promise<TimerType> {
+  return await databases.createDocument<TimerType>(
     TIMERS_DATABASE_ID,
     sessionId,
     ID.unique(),

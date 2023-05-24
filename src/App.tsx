@@ -1,25 +1,24 @@
 import {
   Component,
-  Suspense,
   createEffect,
   createResource,
   createSignal,
-  useTransition,
 } from "solid-js";
-import { getSessionIdFromURL, startNewSession } from "./services/session.js";
 import {
-  Timer as TimerType,
+  SessionContext,
+  getSessionIdFromURL,
+  startNewSession,
+} from "./services/session.js";
+import {
+  TimerType,
   listTimers,
   createTimer,
-  clearTimers,
   subscribeToTimers,
   deleteTimer,
 } from "./services/appwrite/timers.js";
 import { BASE_URL } from "./config.js";
-import { TimerList } from "./components/TimerList.jsx";
-import { TimerInput } from "./components/TimerInput.jsx";
-import { ConfirmButton } from "./components/ConfirmButton.jsx";
-import { ButtonList } from "./components/ButtonList.jsx";
+import { InputSection } from "./components/sections/InputSection.jsx";
+import { BodySection } from "./components/sections/BodySection.jsx";
 
 export const App: Component = () => {
   const [sessionId] = createResource<string>(async () => {
@@ -72,52 +71,31 @@ export const App: Component = () => {
     }
   };
 
+  const onDeleteTimer = async ($tid) => {
+    const index = timers().findIndex((t) => t.$id === $tid);
+    const timerToBeDeleted = timers()[index];
+    try {
+      setTimers(timers().filter((t) => t.$id !== $tid));
+      await deleteTimer(sessionId(), $tid);
+    } catch (error) {
+      const reverted = timers();
+      reverted.splice(index, 0, timerToBeDeleted);
+      setTimers([...reverted]);
+    }
+  };
+
   return (
     <div class="text-secondary">
       <h1 class="text-5xl font-bold text-primary">
         <a href={BASE_URL}>mytimer.cloud</a>
       </h1>
-      <ButtonList>
-        <TimerInput onCreateTimer={onCreateTimer} />
-        <ConfirmButton
-          render={(confirm) => (
-            <button onClick={confirm}>Clear all timers 💀</button>
-          )}
-          renderConfirm={(next) => (
-            <ButtonList>
-              <button onClick={next} class="bg-neutral">
-                NO!
-              </button>
-              <button
-                onClick={async () => {
-                  await clearTimers(sessionId());
-                  next();
-                }}
-                class="bg-error"
-              >
-                Make it so
-              </button>
-            </ButtonList>
-          )}
+      <SessionContext.Provider value={{ sessionId: sessionId() }}>
+        <InputSection onCreateTimer={onCreateTimer} />
+        <BodySection
+          timers={timers() || firstTimers()}
+          onDeleteTimer={onDeleteTimer}
         />
-      </ButtonList>
-      <Suspense fallback={<span>loading timers</span>}>
-        <TimerList
-          timers={timers() ?? firstTimers()}
-          onDeleteTimer={async ($tid) => {
-            const index = timers().findIndex((t) => t.$id === $tid);
-            const timerToBeDeleted = timers()[index];
-            try {
-              setTimers(timers().filter((t) => t.$id !== $tid));
-              await deleteTimer(sessionId(), $tid);
-            } catch (error) {
-              const reverted = timers();
-              reverted.splice(index, 0, timerToBeDeleted);
-              setTimers([...reverted]);
-            }
-          }}
-        />
-      </Suspense>
+      </SessionContext.Provider>
     </div>
   );
 };
