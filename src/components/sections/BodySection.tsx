@@ -11,14 +11,16 @@ export const BodySection: Component<Props> = (props) => {
   const merged = mergeProps({ onDeleteTimer: () => {}, timers: [] }, props);
 
   return (
-    <Suspense fallback={<div>Loading timers...</div>}>
-      {merged.timers.length === 0 && (
-        <div>
-          Let's add a timer :) <div class="inline-block animate-bounce">☝</div>
-          ️
-        </div>
-      )}
+    <>
+      <Suspense fallback={<div>Loading timers...</div>}>
+        {merged.timers.length === 0 && (
+          <div>
+            Let's add a timer :){" "}
+            <div class="inline-block animate-bounce">☝</div>️
+          </div>
+        )}
+      </Suspense>
       <TimerList timers={merged.timers} onDeleteTimer={merged.onDeleteTimer} />
-    </Suspense>
+    </>
   );
 };

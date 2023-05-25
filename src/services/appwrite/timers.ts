@@ -1,5 +1,6 @@
 import { ID, Models, Query } from "appwrite";
 import { client, databases, functions } from "./appwrite.js";
+import { TimerInput } from "../../components/small/TimerInput.jsx";
 
 export const TIMERS_DATABASE_ID = import.meta.env
   .VITE_APPWRITE_TIMERS_DATABASE_ID;
@@ -23,18 +24,32 @@ export async function listTimers(sessionId: string): Promise<TimerType[]> {
   return response.documents;
 }
 
+export type TimerUpdateStatus = "delete" | "create" | "update";
+
 export function subscribeToTimers(
   sessionId: string,
   // TODO: add types
-  cb: (timer: TimerType, removed: boolean) => void
+  cb: (timer: TimerType, status: TimerUpdateStatus) => void
 ) {
   return client.subscribe(
     `databases.${TIMERS_DATABASE_ID}.collections.${sessionId}.documents`,
     (response: any) => {
-      const remove = Boolean(
-        response.events.find((event: string) => event.endsWith(".delete"))
+      const status: TimerUpdateStatus = response.events.reduce(
+        (acc: string, event: string) => {
+          if (event.endsWith("create")) {
+            return "create";
+          }
+          if (event.endsWith("update")) {
+            return "update";
+          }
+          if (event.endsWith("delete")) {
+            return "delete";
+          }
+          return acc;
+        }
       );
-      cb(response.payload, remove);
+
+      cb(response.payload, status);
     }
   );
 }
@@ -64,4 +79,17 @@ export async function clearTimers(sessionId: string): Promise<void> {
 
 export async function deleteTimer(sessionId, timerId: string): Promise<void> {
   return await databases.deleteDocument(TIMERS_DATABASE_ID, sessionId, timerId);
+}
+
+export async function editTimer(
+  sessionId,
+  timerId: string,
+  timer: Partial<TimerType>
+): Promise<void> {
+  return await databases.updateDocument(
+    TIMERS_DATABASE_ID,
+    sessionId,
+    timerId,
+    timer
+  );
 }

@@ -44,16 +44,21 @@ export const App: Component = () => {
 
   createEffect(() => {
     // TODO: add types
-    const unsubscribe = subscribeToTimers(sessionId(), (timer, removed) => {
-      if (!removed) {
+    const unsubscribe = subscribeToTimers(sessionId(), (timer, status) => {
+      if (status === "create") {
         setTimers(
           timers()
             .filter((t) => !t.$id.startsWith("optimistic-"))
             .concat(timer)
         );
-      } else {
+      } else if (status === "delete") {
         // TODO: fix type so no need to ignore
         setTimers(timers().filter((t) => t.$id !== timer.$id));
+      } else if (status === "update") {
+        const index = timers().findIndex((t) => t.$id === timer.$id);
+        const updated = timers();
+        updated.splice(index, 1, timer);
+        setTimers([...updated]);
       }
     });
     return () => {
@@ -96,6 +101,9 @@ export const App: Component = () => {
         <Switch>
           <Match when={sessionId.loading}>
             <div>Starting your session...</div>
+          </Match>
+          <Match when={sessionId.error}>
+            <div>There was some error. Oh no.</div>
           </Match>
           <Match when={!sessionId.loading}>
             <InputSection onCreateTimer={onCreateTimer} />
