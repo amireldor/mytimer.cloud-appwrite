@@ -1,11 +1,5 @@
-import {
-  Component,
-  ErrorBoundary,
-  Suspense,
-  Switch,
-  mergeProps,
-} from "solid-js";
-import { TimerType, deleteTimer } from "../../services/appwrite/timers";
+import { Component, ErrorBoundary, Suspense, mergeProps } from "solid-js";
+import { TimerType } from "../../services/appwrite/timers";
 import { TimerList } from "../small/TimerList";
 import { BASE_URL } from "../../config";
 

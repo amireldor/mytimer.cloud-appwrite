@@ -175,6 +175,7 @@ const DeleteConfirmationDialog: Component<{
               ref.close();
               props.next();
             }}
+            data-testid="cancel-delete-timer"
           >
             cancel
           </button>
@@ -184,6 +185,7 @@ const DeleteConfirmationDialog: Component<{
               props.onDelete();
               props.next();
             }}
+            data-testid="confirm-delete-timer"
           >
             delete timer?
           </button>
