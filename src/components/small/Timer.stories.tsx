@@ -68,7 +68,7 @@ export const Countdown: Story = {
           $id: "timer",
           title: args.title,
           timestamp: date,
-          countUp: true,
+          countUp: false,
         }}
         onDelete={args.onDelete}
       />

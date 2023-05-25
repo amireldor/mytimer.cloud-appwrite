@@ -1,4 +1,11 @@
-import { Component, JSX, createEffect, createResource } from "solid-js";
+import {
+  Component,
+  JSX,
+  createEffect,
+  createResource,
+  onCleanup,
+  onMount,
+} from "solid-js";
 import { TimerType, editTimer } from "../../services/appwrite/timers.js";
 import { intervalToDuration, isBefore } from "date-fns";
 import { formatTime } from "./formatters.js";
@@ -46,11 +53,13 @@ export const Timer: Component<Props> = (props) => {
         ...(info.refetching as Partial<TimerType>),
       };
       const { title, timestamp, countUp } = fullTimer;
-      await editTimer(sessionId(), props.timer.$id, {
-        title,
-        timestamp,
-        countUp,
-      });
+      if (sessionId?.()) {
+        await editTimer(sessionId(), props.timer.$id, {
+          title,
+          timestamp,
+          countUp,
+        });
+      }
       return fullTimer;
     },
     { initialValue: props.timer }
@@ -100,13 +109,17 @@ export const Timer: Component<Props> = (props) => {
 
   return (
     <div
-      class="transition-colors duration-1000"
-      classList={{ "text-success line-through": timerCompleted() }}
+      class="transition-colors duration-1000 border-2 border-primary px-2 py-1 flex items-center"
+      classList={{ "text-success": timerCompleted() }}
     >
-      {isTimer && isTimerRunning() && <TimerStatusIcon>⏳</TimerStatusIcon>}
-      {isTimer && !isTimerRunning() && <TimerStatusIcon>✅</TimerStatusIcon>}
-      {!isTimer && <TimerStatusIcon>⏱</TimerStatusIcon>}{" "}
+      <span>
+        {isTimer && isTimerRunning() && <TimerStatusIcon>⏳</TimerStatusIcon>}
+        {isTimer && !isTimerRunning() && <TimerStatusIcon>✅</TimerStatusIcon>}
+        {!isTimer && <TimerStatusIcon>⏱</TimerStatusIcon>}
+      </span>
       <span
+        class="flex-1 mx-1"
+        classList={{ "line-through": timerCompleted() }}
         contentEditable
         onKeyDown={onTitleEdit}
         onBlur={submitTitleChange}
@@ -114,7 +127,7 @@ export const Timer: Component<Props> = (props) => {
       >
         {edit().title?.trim() || "My Timer"}
       </span>{" "}
-      {timeText()}
+      <span classList={{ "text-xs": timerCompleted() }}>{timeText()}</span>
       <ConfirmButton
         render={(askConfirmation) => {
           return (
@@ -123,25 +136,55 @@ export const Timer: Component<Props> = (props) => {
             </button>
           );
         }}
-        renderConfirm={(next) => {
-          return (
-            <ButtonList>
-              <button class="bg-neutral" onClick={next}>
-                cancel
-              </button>
-              <button
-                class="bg-error"
-                onClick={() => {
-                  props.onDelete();
-                  next();
-                }}
-              >
-                delete timer?
-              </button>
-            </ButtonList>
-          );
-        }}
+        renderConfirm={(next) => (
+          <DeleteConfirmationDialog next={next} onDelete={props.onDelete} />
+        )}
       />
     </div>
+  );
+};
+
+const DeleteConfirmationDialog: Component<{
+  next: () => void;
+  onDelete: () => void;
+}> = (props) => {
+  let ref: HTMLDialogElement;
+  onMount(() => {
+    console.count("yes");
+    ref.showModal();
+  });
+  return (
+    <>
+      <button aria-label="Delete timer" class="grayscale">
+        ❌
+      </button>
+      <dialog
+        ref={ref}
+        class="backdrop:bg-gray-500 backdrop:bg-opacity-50 p-4 rounded open:animate-fade-in backdrop:animate-fade-in"
+        onClose={() => props.next()}
+      >
+        <p>Hello. You're about to delete your timer.</p>
+        <ButtonList class="flex gap-2 w-full">
+          <button
+            class="bg-neutral flex-1"
+            onClick={() => {
+              ref.close();
+              props.next();
+            }}
+          >
+            cancel
+          </button>
+          <button
+            class="bg-error flex-1"
+            onClick={() => {
+              props.onDelete();
+              props.next();
+            }}
+          >
+            delete timer?
+          </button>
+        </ButtonList>
+      </dialog>
+    </>
   );
 };

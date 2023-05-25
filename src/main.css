@@ -18,6 +18,10 @@ input {
   @apply border-primary border-solid border-2;
 }
 
+p {
+  @apply mb-2;
+}
+
 .once {
   animation-iteration-count: 1;
 }
