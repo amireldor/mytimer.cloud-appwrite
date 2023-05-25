@@ -43,7 +43,6 @@ export const App: Component = () => {
   );
 
   createEffect(() => {
-    // TODO: add types
     const unsubscribe = subscribeToTimers(sessionId(), (timer, status) => {
       if (status === "create") {
         setTimers(
@@ -52,7 +51,6 @@ export const App: Component = () => {
             .concat(timer)
         );
       } else if (status === "delete") {
-        // TODO: fix type so no need to ignore
         setTimers(timers().filter((t) => t.$id !== timer.$id));
       } else if (status === "update") {
         const index = timers().findIndex((t) => t.$id === timer.$id);
