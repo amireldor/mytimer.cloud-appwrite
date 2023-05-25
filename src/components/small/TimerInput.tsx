@@ -34,7 +34,7 @@ export const TimerInput: Component<{
 
   const startTimerFromInput = () => {
     props.onCreateTimer({
-      title: "timer",
+      title: "My Timer",
       timestamp: addSeconds(new Date(), seconds()),
       countUp: false,
     });
@@ -97,7 +97,7 @@ export const TimerInput: Component<{
           props.onCreateTimer({
             countUp: true,
             timestamp: new Date(),
-            title: "stopwatch",
+            title: "My Stopwatch",
           });
         }}
       >

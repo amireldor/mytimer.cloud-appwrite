@@ -28,7 +28,7 @@ export const App: Component = () => {
     return getSessionIdFromURL() ?? (await startNewSession());
   });
 
-  const [timers, { mutate, refetch }] = createResource<TimerType[], string>(
+  const [timers, { mutate }] = createResource<TimerType[], string>(
     sessionId,
     async () => {
       if (sessionId()) {
