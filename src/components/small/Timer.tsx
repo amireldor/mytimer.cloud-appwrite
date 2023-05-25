@@ -109,7 +109,7 @@ export const Timer: Component<Props> = (props) => {
 
   return (
     <div
-      class="transition-colors duration-1000 border-2 border-primary px-2 py-1 flex items-center"
+      class="transition-colors duration-1000 border-2 border-primary px-2 py-1 flex items-center rounded"
       classList={{ "text-success": timerCompleted() }}
     >
       <span>
@@ -150,7 +150,6 @@ const DeleteConfirmationDialog: Component<{
 }> = (props) => {
   let ref: HTMLDialogElement;
   onMount(() => {
-    console.count("yes");
     ref.showModal();
   });
   return (
