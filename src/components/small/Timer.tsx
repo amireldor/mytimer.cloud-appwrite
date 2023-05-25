@@ -1,4 +1,4 @@
-import { Component, JSX, createResource } from "solid-js";
+import { Component, JSX, createEffect, createResource } from "solid-js";
 import { TimerType, editTimer } from "../../services/appwrite/timers.js";
 import { intervalToDuration, isBefore } from "date-fns";
 import { formatTime } from "./formatters.js";
@@ -68,7 +68,15 @@ export const Timer: Component<Props> = (props) => {
 
   let title: HTMLDivElement;
 
-  const resetTitle = () => (title.textContent = props.timer.title);
+  const titleProp = () => props.timer.title;
+
+  createEffect(() => {
+    if (titleProp().trim().length > 0) {
+      resetTitle();
+    }
+  });
+
+  const resetTitle = () => (title.textContent = titleProp());
 
   const onTitleEdit = (event: KeyboardEvent) => {
     if (event.key === "Escape") {
