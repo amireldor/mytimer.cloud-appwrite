@@ -28,15 +28,11 @@ export const App: Component = () => {
     return getSessionIdFromURL() ?? (await startNewSession());
   });
 
-  const [timers, setTimers] = createSignal<TimerType[]>(null);
-
-  const [firstTimers] = createResource<TimerType[], string>(
+  const [timers, { mutate, refetch }] = createResource<TimerType[], string>(
     sessionId,
     async () => {
       if (sessionId()) {
-        const response = await listTimers(sessionId());
-        setTimers(response);
-        return response;
+        return await listTimers(sessionId());
       }
       return [];
     }
@@ -45,18 +41,18 @@ export const App: Component = () => {
   createEffect(() => {
     const unsubscribe = subscribeToTimers(sessionId(), (timer, status) => {
       if (status === "create") {
-        setTimers(
+        mutate(
           timers()
             .filter((t) => !t.$id.startsWith("optimistic-"))
             .concat(timer)
         );
       } else if (status === "delete") {
-        setTimers(timers().filter((t) => t.$id !== timer.$id));
+        mutate(timers().filter((t) => t.$id !== timer.$id));
       } else if (status === "update") {
         const index = timers().findIndex((t) => t.$id === timer.$id);
         const updated = timers();
         updated.splice(index, 1, timer);
-        setTimers([...updated]);
+        mutate([...updated]);
       }
     });
     return () => {
@@ -66,12 +62,10 @@ export const App: Component = () => {
 
   const onCreateTimer = async (timer: TimerType) => {
     try {
-      setTimers(
-        timers().concat({ ...timer, $id: `optimistic-${Math.random()}` })
-      );
+      mutate(timers().concat({ ...timer, $id: `optimistic-${Math.random()}` }));
       await createTimer(sessionId(), timer);
     } catch (error) {
-      setTimers(timers().filter((t) => !t.$id.startsWith("optimistic-")));
+      mutate(timers().filter((t) => !t.$id.startsWith("optimistic-")));
       console.error(error);
       throw error;
     }
@@ -81,12 +75,12 @@ export const App: Component = () => {
     const index = timers().findIndex((t) => t.$id === $tid);
     const timerToBeDeleted = timers()[index];
     try {
-      setTimers(timers().filter((t) => t.$id !== $tid));
+      mutate(timers().filter((t) => t.$id !== $tid));
       await deleteTimer(sessionId(), $tid);
     } catch (error) {
       const reverted = timers();
       reverted.splice(index, 0, timerToBeDeleted);
-      setTimers([...reverted]);
+      mutate([...reverted]);
     }
   };
 
@@ -105,10 +99,7 @@ export const App: Component = () => {
           </Match>
           <Match when={!sessionId.loading}>
             <InputSection onCreateTimer={onCreateTimer} />
-            <BodySection
-              timers={timers() || firstTimers()}
-              onDeleteTimer={onDeleteTimer}
-            />
+            <BodySection timers={timers()} onDeleteTimer={onDeleteTimer} />
           </Match>
         </Switch>
       </SessionProvider>

@@ -64,35 +64,46 @@ export const Timer: Component<Props> = (props) => {
   const timerCompleted = () => isTimer && !isTimerRunning();
 
   const timeText = () =>
-    timerCompleted() ? `Completed ${time()} ago` : time();
+    timerCompleted() ? `(completed ${time()} ago)` : time();
+
+  let title: HTMLDivElement;
+
+  const resetTitle = () => (title.textContent = props.timer.title);
 
   const onTitleEdit = (event: KeyboardEvent) => {
-    const currentTarget = event.currentTarget as HTMLDivElement;
-    const resetTitle = () => (currentTarget.textContent = props.timer.title);
     if (event.key === "Escape") {
       resetTitle();
     }
     if (event.key === "Enter") {
       event.preventDefault();
-      const content = currentTarget.textContent.trim();
-      if (content) {
-        mutate({ title: content });
-        refetch({ title: content });
-      } else {
-        resetTitle();
-      }
+      submitTitleChange();
+    }
+  };
+
+  const submitTitleChange = () => {
+    const content = title.textContent?.trim();
+    if (content) {
+      mutate({ title: content });
+      refetch({ title: content });
+    } else {
+      title.textContent = props.timer.title;
     }
   };
 
   return (
     <div
       class="transition-colors duration-1000"
-      classList={{ "text-success": timerCompleted() }}
+      classList={{ "text-success line-through": timerCompleted() }}
     >
       {isTimer && isTimerRunning() && <TimerStatusIcon>⏳</TimerStatusIcon>}
       {isTimer && !isTimerRunning() && <TimerStatusIcon>✅</TimerStatusIcon>}
       {!isTimer && <TimerStatusIcon>⏱</TimerStatusIcon>}{" "}
-      <span contentEditable onKeyDown={onTitleEdit}>
+      <span
+        contentEditable
+        onKeyDown={onTitleEdit}
+        onBlur={submitTitleChange}
+        ref={title}
+      >
         {edit().title?.trim() || "My Timer"}
       </span>{" "}
       {timeText()}
