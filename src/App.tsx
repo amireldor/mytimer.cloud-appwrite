@@ -85,8 +85,8 @@ export const App: Component = () => {
   };
 
   return (
-    <div class="text-secondary">
-      <h1 class="text-5xl font-bold text-primary">
+    <div class="text-secondary sm:p-1 md:py-2 md:px-4">
+      <h1 class="text-5xl font-bold text-primary mb-4">
         <a href={BASE_URL}>mytimer.cloud</a>
       </h1>
       <SessionProvider>

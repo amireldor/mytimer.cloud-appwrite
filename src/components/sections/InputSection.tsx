@@ -12,15 +12,15 @@ export interface Props {
 export const InputSection: Component<Props> = (props) => {
   const sessionId = useSession();
   return (
-    <ButtonList>
+    <div class="flex flex-col gap-2 mb-2">
       <TimerInput onCreateTimer={props.onCreateTimer} />
       <ConfirmButton
         render={(confirm) => (
           <button onClick={confirm}>Clear all timers 💀</button>
         )}
         renderConfirm={(next) => (
-          <ButtonList>
-            <button onClick={next} class="bg-neutral">
+          <ButtonList class="flex gap-2 w-full">
+            <button onClick={next} class="bg-neutral flex-1">
               NO!
             </button>
             <button
@@ -28,13 +28,13 @@ export const InputSection: Component<Props> = (props) => {
                 await clearTimers(sessionId());
                 next();
               }}
-              class="bg-error"
+              class="bg-error flex-2"
             >
               Make it so
             </button>
           </ButtonList>
         )}
       />
-    </ButtonList>
+    </div>
   );
 };

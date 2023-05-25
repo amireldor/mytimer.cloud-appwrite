@@ -15,7 +15,7 @@ button[disabled] {
 }
 
 input {
-  @apply border-primary border-solid border-2;
+  @apply border-primary border-solid border-2 p-2 rounded;
 }
 
 p {

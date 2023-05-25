@@ -42,10 +42,10 @@ export const TimerInput: Component<{
   };
 
   return (
-    <ButtonList inline={false}>
+    <>
       <input
         data-testid="timer-input"
-        type="text"
+        pattern="[0-9:]*"
         placeholder='type "25:00" and hit Enter'
         value={valueToShow()}
         onKeyDown={(event) => {
@@ -85,25 +85,27 @@ export const TimerInput: Component<{
         }}
       />
 
-      <button
-        class="bg-primary"
-        disabled={!valueToShow()}
-        onClick={() => startTimerFromInput()}
-      >
-        Add timer
-      </button>
-      <button
-        class="bg-primary"
-        onClick={() => {
-          props.onCreateTimer({
-            countUp: true,
-            timestamp: new Date(),
-            title: "My Stopwatch",
-          });
-        }}
-      >
-        Add stopwatch
-      </button>
-    </ButtonList>
+      <ButtonList inline={false}>
+        <button
+          class="bg-primary flex-1"
+          disabled={!valueToShow()}
+          onClick={() => startTimerFromInput()}
+        >
+          Add timer
+        </button>
+        <button
+          class="bg-primary flex-1"
+          onClick={() => {
+            props.onCreateTimer({
+              countUp: true,
+              timestamp: new Date(),
+              title: "My Stopwatch",
+            });
+          }}
+        >
+          Add stopwatch
+        </button>
+      </ButtonList>
+    </>
   );
 };
