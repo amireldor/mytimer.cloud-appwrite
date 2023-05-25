@@ -130,7 +130,9 @@ export const Timer: Component<Props> = (props) => {
       >
         {edit().title?.trim() || "My Timer"}
       </span>{" "}
-      <span classList={{ "text-xs": timerCompleted() }}>{timeText()}</span>
+      <span class={"basis-px"} classList={{ "text-xs": timerCompleted() }}>
+        {timeText()}
+      </span>
       <ConfirmButton
         render={(askConfirmation) => {
           return (
