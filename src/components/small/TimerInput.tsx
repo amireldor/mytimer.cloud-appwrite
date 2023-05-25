@@ -44,8 +44,9 @@ export const TimerInput: Component<{
   return (
     <ButtonList inline={false}>
       <input
+        data-testid="timer-input"
         type="text"
-        placeholder="type numbers"
+        placeholder='type "25:00" and hit Enter'
         value={valueToShow()}
         onKeyDown={(event) => {
           event.preventDefault();

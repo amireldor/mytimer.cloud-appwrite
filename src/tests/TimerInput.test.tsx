@@ -12,90 +12,57 @@ beforeAll(() => {
 
 test("TimerInput renders the correct placeholder", () => {
   render(() => <TimerInput onCreateTimer={() => {}} />);
-  expect(screen.queryByPlaceholderText("type numbers")).not.toBeNull();
+  expect(screen.queryByTestId("timer-input")).not.toBeNull();
   expect(screen.queryByText("Add timer")).not.toBeNull();
   expect(screen.queryByText("Add stopwatch")).not.toBeNull();
 });
 
 test("TimerInput does not accept non-digits or colon", async () => {
   render(() => <TimerInput onCreateTimer={() => {}} />);
-  await userEvent.type(
-    screen.queryByPlaceholderText("type numbers"),
-    "Hello my friend"
-  );
-  expect(screen.getByPlaceholderText("type numbers")).toHaveProperty(
-    "value",
-    ""
-  );
+  await userEvent.type(screen.queryByTestId("timer-input"), "Hello my friend");
+  expect(screen.queryByTestId("timer-input")).toHaveProperty("value", "");
 });
 
 test("TimerInput accepts a digit", async () => {
   render(() => <TimerInput onCreateTimer={() => {}} />);
-  await userEvent.type(screen.queryByPlaceholderText("type numbers"), "1");
-  expect(screen.getByPlaceholderText("type numbers")).toHaveProperty(
-    "value",
-    "1"
-  );
+  await userEvent.type(screen.queryByTestId("timer-input"), "1");
+  expect(screen.queryByTestId("timer-input")).toHaveProperty("value", "1");
 });
 
 test("TimerInput accepts a digit and colon and adds a leading zero", async () => {
   render(() => <TimerInput onCreateTimer={() => {}} />);
-  await userEvent.type(screen.queryByPlaceholderText("type numbers"), "1:0");
-  expect(screen.getByPlaceholderText("type numbers")).toHaveProperty(
-    "value",
-    "01:0"
-  );
+  await userEvent.type(screen.queryByTestId("timer-input"), "1:0");
+  expect(screen.queryByTestId("timer-input")).toHaveProperty("value", "01:0");
 });
 
 test("TimerInput buttons are disabled on empty input and enabled on input", async () => {
   render(() => <TimerInput onCreateTimer={() => {}} />);
   expect(screen.getByText("Add timer")).toHaveProperty("disabled", true);
   expect(screen.getByText("Add stopwatch")).toHaveProperty("disabled", false);
-  await userEvent.type(screen.queryByPlaceholderText("type numbers"), "1");
+  await userEvent.type(screen.queryByTestId("timer-input"), "1");
   expect(screen.getByText("Add timer")).toHaveProperty("disabled", false);
   expect(screen.getByText("Add stopwatch")).toHaveProperty("disabled", false);
-  await userEvent.type(
-    screen.queryByPlaceholderText("type numbers"),
-    "{Escape}"
-  );
+  await userEvent.type(screen.queryByTestId("timer-input"), "{Escape}");
   expect(screen.getByText("Add timer")).toHaveProperty("disabled", true);
   expect(screen.getByText("Add stopwatch")).toHaveProperty("disabled", false);
 });
 
 test("TimerInpupt accepts Enter that clears the input", async () => {
   render(() => <TimerInput onCreateTimer={() => {}} />);
-  await userEvent.type(
-    screen.queryByPlaceholderText("type numbers"),
-    "1{Enter}"
-  );
-  expect(screen.getByPlaceholderText("type numbers")).toHaveProperty(
-    "value",
-    ""
-  );
+  await userEvent.type(screen.queryByTestId("timer-input"), "1{Enter}");
+  expect(screen.queryByTestId("timer-input")).toHaveProperty("value", "");
 });
 
 test("TimerInpupt accepts Escape that clears the input", async () => {
   render(() => <TimerInput onCreateTimer={() => {}} />);
-  await userEvent.type(
-    screen.queryByPlaceholderText("type numbers"),
-    "1{Escape}"
-  );
-  expect(screen.getByPlaceholderText("type numbers")).toHaveProperty(
-    "value",
-    ""
-  );
+  await userEvent.type(screen.queryByTestId("timer-input"), "1{Escape}");
+  expect(screen.queryByTestId("timer-input")).toHaveProperty("value", "");
 });
 
 test("TimerInpupt accepts Backspace that clears the input", async () => {
   render(() => <TimerInput onCreateTimer={() => {}} />);
-  await userEvent.type(
-    screen.queryByPlaceholderText("type numbers"),
-    "1{Backspace}"
-  );
-  expect(screen.getByPlaceholderText("type numbers")).toHaveProperty(
-    "value",
-    ""
-  );
+  await userEvent.type(screen.queryByTestId("timer-input"), "1{Backspace}");
+  expect(screen.queryByTestId("timer-input")).toHaveProperty("value", "");
 });
 
 test("TimerInput calls callback with the correct arguments for stopwatch", async () => {
@@ -112,11 +79,8 @@ test("TimerInput calls callback with the correct arguments for stopwatch", async
 test("TimerInput calls callback with the correct arguments for stopwatch", async () => {
   const fn = vi.fn();
   render(() => <TimerInput onCreateTimer={fn} />);
-  await userEvent.type(screen.queryByPlaceholderText("type numbers"), "5:00");
-  expect(screen.getByPlaceholderText("type numbers")).toHaveProperty(
-    "value",
-    "05:00"
-  );
+  await userEvent.type(screen.queryByTestId("timer-input"), "5:00");
+  expect(screen.queryByTestId("timer-input")).toHaveProperty("value", "05:00");
   await userEvent.click(screen.getByText("Add timer"));
   expect(fn).toHaveBeenCalledWith({
     title: "My Timer",
