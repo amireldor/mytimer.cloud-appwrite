@@ -110,7 +110,10 @@ export const Timer: Component<Props> = (props) => {
   return (
     <div
       class="transition-colors duration-1000 border-2 border-primary px-2 py-1 flex items-center rounded"
-      classList={{ "text-success": timerCompleted() }}
+      classList={{
+        "text-success border-success bg-success bg-opacity-10":
+          timerCompleted(),
+      }}
     >
       <span>
         {isTimer && isTimerRunning() && <TimerStatusIcon>⏳</TimerStatusIcon>}

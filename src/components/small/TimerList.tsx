@@ -1,13 +1,6 @@
-import {
-  Component,
-  For,
-  createEffect,
-  createResource,
-  createSignal,
-} from "solid-js";
+import { Component, For, createEffect, createSignal } from "solid-js";
 import { Timer } from "./Timer.jsx";
-import { TimerType, editTimer } from "../../services/appwrite/timers.js";
-import { useSession } from "../../services/session.jsx";
+import { TimerType } from "../../services/appwrite/timers.js";
 
 export const TimerList: Component<{
   timers: TimerType[];
@@ -23,14 +16,16 @@ export const TimerList: Component<{
   });
 
   return (
-    <For each={props.timers}>
-      {(timer) => (
-        <Timer
-          timer={timer}
-          tick={tick()}
-          onDelete={() => props.onDeleteTimer(timer.$id)}
-        />
-      )}
-    </For>
+    <div class="grid gap-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 lg:gap-4 xl:gap-8">
+      <For each={props.timers}>
+        {(timer) => (
+          <Timer
+            timer={timer}
+            tick={tick()}
+            onDelete={() => props.onDeleteTimer(timer.$id)}
+          />
+        )}
+      </For>
+    </div>
   );
 };

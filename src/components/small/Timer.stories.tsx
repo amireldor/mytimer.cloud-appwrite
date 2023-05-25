@@ -19,7 +19,7 @@ export const Stopwatch: Story = {
   args: {
     title: "My Stopwatch",
   },
-  render: (args) => {
+  render(args) {
     const [tick, setTick] = createSignal(0);
     const date = new Date();
     createEffect(() => {
