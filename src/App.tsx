@@ -93,7 +93,6 @@ export const App: Component = () => {
         <a href={BASE_URL}>mytimer.cloud</a>
       </h1>
       <SessionProvider>
-        {" "}
         <Switch>
           <Match when={sessionId.loading}>
             <div>Starting your session...</div>
