@@ -103,7 +103,7 @@ test("TimerInput calls callback with the correct arguments for stopwatch", async
   render(() => <TimerInput onCreateTimer={fn} />);
   await userEvent.click(screen.getByText("Add stopwatch"));
   expect(fn).toHaveBeenCalledWith({
-    title: "stopwatch",
+    title: "My Stopwatch",
     timestamp: new Date(),
     countUp: true,
   } as Omit<TimerType, "$id">);
@@ -119,7 +119,7 @@ test("TimerInput calls callback with the correct arguments for stopwatch", async
   );
   await userEvent.click(screen.getByText("Add timer"));
   expect(fn).toHaveBeenCalledWith({
-    title: "timer",
+    title: "My Timer",
     timestamp: addMinutes(new Date(), 5),
     countUp: false,
   } as Omit<TimerType, "$id">);
