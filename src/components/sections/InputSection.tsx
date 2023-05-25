@@ -1,17 +1,16 @@
-import { Component, useContext } from "solid-js";
+import { Component, createEffect, useContext } from "solid-js";
 import { TimerType, clearTimers } from "../../services/appwrite/timers";
 import { ButtonList } from "../small/ButtonList";
 import { ConfirmButton } from "../small/ConfirmButton";
 import { TimerInput } from "../small/TimerInput";
-import { useSession } from "../../services/session";
+import { SessionContext, useSession } from "../../services/session";
 
 export interface Props {
   onCreateTimer: (timer: TimerType) => void;
 }
 
 export const InputSection: Component<Props> = (props) => {
-  const { sessionId } = useSession();
-
+  const sessionId = useSession();
   return (
     <ButtonList>
       <TimerInput onCreateTimer={props.onCreateTimer} />
@@ -26,7 +25,7 @@ export const InputSection: Component<Props> = (props) => {
             </button>
             <button
               onClick={async () => {
-                await clearTimers(sessionId);
+                await clearTimers(sessionId());
                 next();
               }}
               class="bg-error"

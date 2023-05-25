@@ -8,6 +8,7 @@ import {
 } from "solid-js";
 import {
   SessionContext,
+  SessionProvider,
   getSessionIdFromURL,
   startNewSession,
 } from "./services/session.js";
@@ -91,7 +92,8 @@ export const App: Component = () => {
       <h1 class="text-5xl font-bold text-primary">
         <a href={BASE_URL}>mytimer.cloud</a>
       </h1>
-      <SessionContext.Provider value={{ sessionId: sessionId() }}>
+      <SessionProvider>
+        {" "}
         <Switch>
           <Match when={sessionId.loading}>
             <div>Starting your session...</div>
@@ -104,7 +106,7 @@ export const App: Component = () => {
             />
           </Match>
         </Switch>
-      </SessionContext.Provider>
+      </SessionProvider>
     </div>
   );
 };

@@ -1,4 +1,11 @@
-import { createContext, useContext } from "solid-js";
+import {
+  children,
+  createContext,
+  createEffect,
+  createResource,
+  createSignal,
+  useContext,
+} from "solid-js";
 import { functions } from "./appwrite/appwrite.js";
 
 const SESSION_PARAM_NAME = "session_id";
@@ -6,10 +13,22 @@ const SESSION_PARAM_NAME = "session_id";
 export const VITE_CREATE_SESSION_FUNCTION_ID = import.meta.env
   .VITE_CREATE_SESSION_FUNCTION_ID;
 
-export const SessionContext = createContext<{ sessionId: string }>();
+export const SessionContext = createContext<() => string>();
 
 export const useSession = () => {
   return useContext(SessionContext);
+};
+
+export const SessionProvider = (props: { children: any }) => {
+  const [sessionId] = createResource<string>(async () => {
+    return getSessionIdFromURL() ?? (await startNewSession());
+  });
+
+  return (
+    <SessionContext.Provider value={sessionId}>
+      {props.children}
+    </SessionContext.Provider>
+  );
 };
 
 export function getSessionIdFromURL(): string | null {
