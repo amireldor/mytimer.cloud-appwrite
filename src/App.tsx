@@ -85,7 +85,7 @@ export const App: Component = () => {
   };
 
   return (
-    <div class="text-secondary sm:p-1 md:py-2 md:px-4">
+    <div class="text-secondary p-1 md:py-2 md:px-4">
       <h1 class="text-5xl font-bold text-primary mb-4">
         <a href={BASE_URL}>mytimer.cloud</a>
       </h1>
@@ -98,6 +98,13 @@ export const App: Component = () => {
             <div>There was some error. Oh no.</div>
           </Match>
           <Match when={!sessionId.loading}>
+            <p>
+              <mark>
+                Your session ID is <strong>{sessionId()}</strong>
+              </mark>{" "}
+              Please bookmark this page along with your session id to not lose
+              it :)
+            </p>
             <InputSection onCreateTimer={onCreateTimer} />
             <BodySection timers={timers()} onDeleteTimer={onDeleteTimer} />
           </Match>
