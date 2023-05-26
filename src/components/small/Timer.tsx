@@ -3,12 +3,11 @@ import {
   JSX,
   createEffect,
   createResource,
-  onCleanup,
   onMount,
 } from "solid-js";
 import { TimerType, editTimer } from "../../services/appwrite/timers.js";
-import { intervalToDuration, isBefore } from "date-fns";
-import { formatTime } from "./formatters.js";
+import { differenceInSeconds, isBefore } from "date-fns";
+import { secondsToStr } from "./formatters.js";
 import { ConfirmButton } from "./ConfirmButton.jsx";
 import { ButtonList } from "./ButtonList.jsx";
 import { useSession } from "../../services/session.jsx";
@@ -25,18 +24,12 @@ const TimerStatusIcon: Component<{ children: JSX.Element }> = (props) => {
 
 export const Timer: Component<Props> = (props) => {
   const tick = () => props.tick;
-  const calculateDuration = () =>
-    intervalToDuration({
-      start: new Date(props.timer.timestamp),
-      end: new Date(),
-    });
-
-  const duration = () => {
-    tick(); // for rerendeing
-    return calculateDuration();
+  const time = () => {
+    tick(); // for rerendering
+    return secondsToStr(
+      Math.abs(differenceInSeconds(new Date(), new Date(props.timer.timestamp)))
+    );
   };
-
-  const time = () => formatTime(duration());
 
   const sessionId = useSession();
 
@@ -136,7 +129,11 @@ export const Timer: Component<Props> = (props) => {
       <ConfirmButton
         render={(askConfirmation) => {
           return (
-            <button onClick={askConfirmation} aria-label="Delete timer">
+            <button
+              onClick={askConfirmation}
+              aria-label="Delete timer"
+              class="border-0"
+            >
               ❌
             </button>
           );
@@ -159,7 +156,7 @@ const DeleteConfirmationDialog: Component<{
   });
   return (
     <>
-      <button aria-label="Delete timer" class="grayscale">
+      <button aria-label="Delete timer" class="grayscale border-0">
         ❌
       </button>
       <dialog

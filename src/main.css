@@ -7,7 +7,7 @@ a {
 }
 
 button {
-  @apply text-secondary font-bold py-2 px-4 rounded;
+  @apply text-secondary font-bold py-2 px-4 border-2 border-solid rounded;
 }
 
 button[disabled] {
