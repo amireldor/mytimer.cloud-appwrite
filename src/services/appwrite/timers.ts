@@ -1,6 +1,5 @@
-import { ID, Models, Query } from "appwrite";
+import { ID, Query } from "appwrite";
 import { client, databases, functions } from "./appwrite.js";
-import { TimerInput } from "../../components/small/TimerInput.jsx";
 
 export const TIMERS_DATABASE_ID = import.meta.env
   .VITE_APPWRITE_TIMERS_DATABASE_ID;
@@ -8,7 +7,7 @@ export const TIMERS_DATABASE_ID = import.meta.env
 export const VITE_CLEAR_TIMERS_FUNCTION_ID = import.meta.env
   .VITE_CLEAR_TIMERS_FUNCTION_ID;
 
-export interface TimerType extends Models.Document {
+export interface TimerType {
   $id: string;
   title: string;
   timestamp: Date;

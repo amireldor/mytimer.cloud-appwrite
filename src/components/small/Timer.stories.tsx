@@ -81,7 +81,7 @@ export const LongCountdown: Story = {
   args: {
     title: "My Long Timer",
   },
-  render: (args) => {
+  render(args) {
     const [tick, setTick] = createSignal(0);
     const date = addMonths(new Date(), 1);
     createEffect(() => {

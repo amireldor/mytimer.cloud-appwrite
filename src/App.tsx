@@ -4,10 +4,8 @@ import {
   Switch,
   createEffect,
   createResource,
-  createSignal,
 } from "solid-js";
 import {
-  SessionContext,
   SessionProvider,
   getSessionIdFromURL,
   startNewSession,

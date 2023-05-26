@@ -10,6 +10,7 @@ export const TimerInput: Component<{
 
   const valueToShow = () =>
     value()
+      .replace(/[^0-9:]g/, "")
       .split("")
       .reduceRight((acc, curr, index) => {
         const textToAdd = (index > 0 && index % 2 === 0 ? ":" : "") + curr;
@@ -41,50 +42,51 @@ export const TimerInput: Component<{
     setValue("");
   };
 
+  const onInput = (event) => {
+    event.preventDefault();
+    // TODO: code can be more readable
+    if (event.key === "Enter") {
+      startTimerFromInput();
+      return;
+    }
+    if (event.key === "Backspace") {
+      setValue(value().slice(0, -1));
+      return;
+    }
+    if (event.key === "Escape") {
+      setValue("");
+      return;
+    }
+    if (event.key === ":") {
+      if (value().length % 2 === 1) {
+        const val = value();
+        setValue(val.slice(0, -1) + "0" + val[val.length - 1]);
+      }
+      return;
+    }
+    const asNumber = Number.parseInt(event.key);
+    if (Number.isNaN(asNumber)) {
+      return;
+    }
+    const split = valueToShow().split(":");
+    const colonCount = split.length - 1;
+    if (colonCount < 3) {
+      setValue(value() + event.key);
+    } else {
+      const shouldTrim = split[split.length - 1].length === 2;
+      setValue(value().slice(shouldTrim ? 1 : 0) + event.key);
+    }
+  };
+
   return (
     <>
       <input
         data-testid="timer-input"
         pattern="[0-9:]*"
-        placeholder='type "25:00" and hit Enter'
+        placeholder='type "25:00"'
         value={valueToShow()}
-        onKeyDown={(event) => {
-          event.preventDefault();
-          // TODO: code can be more readable
-          if (event.key === "Enter") {
-            startTimerFromInput();
-            return;
-          }
-          if (event.key === "Backspace") {
-            setValue(value().slice(0, -1));
-            return;
-          }
-          if (event.key === "Escape") {
-            setValue("");
-            return;
-          }
-          if (event.key === ":") {
-            if (value().length % 2 === 1) {
-              const val = value();
-              setValue(val.slice(0, -1) + "0" + val[val.length - 1]);
-            }
-            return;
-          }
-          const asNumber = Number.parseInt(event.key);
-          if (Number.isNaN(asNumber)) {
-            return;
-          }
-          const split = valueToShow().split(":");
-          const colonCount = split.length - 1;
-          if (colonCount < 3) {
-            setValue(value() + event.key);
-          } else {
-            const shouldTrim = split[split.length - 1].length === 2;
-            setValue(value().slice(shouldTrim ? 1 : 0) + event.key);
-          }
-        }}
+        onKeyDown={onInput}
       />
-
       <ButtonList inline={false}>
         <button
           class="bg-primary flex-1"
