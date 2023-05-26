@@ -6,7 +6,7 @@ import {
   createResource,
 } from "solid-js";
 import {
-  SessionProvider,
+  SessionContext,
   getSessionIdFromURL,
   startNewSession,
 } from "./services/session.js";
@@ -87,7 +87,7 @@ export const App: Component = () => {
       <h1 class="text-5xl font-bold text-primary mb-4">
         <a href={BASE_URL}>mytimer.cloud</a>
       </h1>
-      <SessionProvider>
+      <SessionContext.Provider value={sessionId}>
         <Switch>
           <Match when={sessionId.loading}>
             <div>Starting your session...</div>
@@ -107,7 +107,7 @@ export const App: Component = () => {
             <BodySection timers={timers()} onDeleteTimer={onDeleteTimer} />
           </Match>
         </Switch>
-      </SessionProvider>
+      </SessionContext.Provider>
     </div>
   );
 };

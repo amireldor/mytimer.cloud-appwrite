@@ -1,11 +1,4 @@
-import {
-  children,
-  createContext,
-  createEffect,
-  createResource,
-  createSignal,
-  useContext,
-} from "solid-js";
+import { createContext, createResource, useContext } from "solid-js";
 import { functions } from "./appwrite/appwrite.js";
 
 const SESSION_PARAM_NAME = "session_id";
@@ -17,18 +10,6 @@ export const SessionContext = createContext<() => string>();
 
 export const useSession = () => {
   return useContext(SessionContext);
-};
-
-export const SessionProvider = (props: { children: any }) => {
-  const [sessionId] = createResource<string>(async () => {
-    return getSessionIdFromURL() ?? (await startNewSession());
-  });
-
-  return (
-    <SessionContext.Provider value={sessionId}>
-      {props.children}
-    </SessionContext.Provider>
-  );
 };
 
 export function getSessionIdFromURL(): string | null {
@@ -51,6 +32,7 @@ export async function createSession(): Promise<string> {
 }
 
 export async function startNewSession() {
+  console.count("CALLING");
   const sessionId = await createSession();
   if (!sessionId) {
     throw new Error("Failed to start a new session");
