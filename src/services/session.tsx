@@ -32,7 +32,6 @@ export async function createSession(): Promise<string> {
 }
 
 export async function startNewSession() {
-  console.count("CALLING");
   const sessionId = await createSession();
   if (!sessionId) {
     throw new Error("Failed to start a new session");
