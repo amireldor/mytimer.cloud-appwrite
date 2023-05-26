@@ -5,17 +5,16 @@ import { ButtonList } from "./ButtonList.jsx";
 import { strToSeconds, secondsToStr } from "./formatters.js";
 
 export const TimerInput: Component<{
-  onCreateTimer: (timer: Omit<TimerType, "$id">) => unknown;
+  onCreateTimer: (timer: Omit<TimerType, "$id">) => void;
 }> = (props) => {
+  let form: HTMLFormElement;
   const [rawValue, setRawValue] = createSignal("");
+  const valueToShow = () => secondsToStr(strToSeconds(rawValue()));
 
-  const seconds = () => strToSeconds(rawValue());
-  const valueToShow = () => secondsToStr(seconds());
-
-  const startTimerFromInput = () => {
+  const startTimerFromInput = async (raw: string) => {
     props.onCreateTimer({
       title: "My Timer",
-      timestamp: addSeconds(new Date(), seconds() ?? 0),
+      timestamp: addSeconds(new Date(), strToSeconds(raw)),
       countUp: false,
     });
     setRawValue("");
@@ -24,10 +23,10 @@ export const TimerInput: Component<{
   const onKeyDown: JSX.EventHandler<HTMLInputElement, KeyboardEvent> = (
     event
   ) => {
-    event.preventDefault();
     const key = event.key;
     if (key == "Enter") {
-      startTimerFromInput();
+      event.preventDefault();
+      event.currentTarget.blur();
       return;
     }
     if (key == "Backspace") {
@@ -35,13 +34,13 @@ export const TimerInput: Component<{
       return;
     }
     if (key === "Escape") {
+      event.preventDefault();
       setRawValue("");
       return;
     }
     if (key.match(/[^0-9:]/)) {
       return;
     }
-    setRawValue(event.currentTarget.value + event.key);
   };
 
   const onChange: JSX.EventHandler<HTMLInputElement, Event> = (event) => {
@@ -59,12 +58,13 @@ export const TimerInput: Component<{
         onKeyDown={onKeyDown}
         onChange={onChange}
         onBlur={() => setRawValue(valueToShow())}
+        enterkeyhint="next"
       />
       <ButtonList inline={false}>
         <button
           class="bg-primary flex-1"
           disabled={!valueToShow()}
-          onClick={() => startTimerFromInput()}
+          onClick={() => startTimerFromInput(rawValue())}
         >
           Add timer
         </button>
