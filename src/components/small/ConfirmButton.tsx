@@ -1,11 +1,4 @@
-import {
-  ChildrenReturn,
-  Component,
-  JSX,
-  children,
-  createEffect,
-  createSignal,
-} from "solid-js";
+import { Component, JSX, createSignal } from "solid-js";
 
 export const ConfirmButton: Component<{
   render: (askConfirmation: () => void) => JSX.Element;

@@ -1,7 +1,6 @@
 import { Meta, StoryObj } from "storybook-solidjs";
 
 import { TimerInput } from "./TimerInput";
-import { Timer } from "./Timer";
 
 const meta = {
   title: "Timer Input",

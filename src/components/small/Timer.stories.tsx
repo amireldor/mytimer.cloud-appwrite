@@ -2,7 +2,7 @@ import { Meta, StoryObj } from "storybook-solidjs";
 
 import { Timer } from "./Timer";
 import { createEffect, createSignal } from "solid-js";
-import { addDays, addMinutes, addMonths } from "date-fns";
+import { addMinutes, addMonths } from "date-fns";
 
 const meta = {
   title: "Timer",
