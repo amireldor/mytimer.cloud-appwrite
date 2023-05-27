@@ -7,7 +7,6 @@ import { strToSeconds, secondsToStr } from "./formatters.js";
 export const TimerInput: Component<{
   onCreateTimer: (timer: Omit<TimerType, "$id">) => void;
 }> = (props) => {
-  let form: HTMLFormElement;
   const [rawValue, setRawValue] = createSignal("");
   const valueToShow = () => secondsToStr(strToSeconds(rawValue()));
 
@@ -27,18 +26,6 @@ export const TimerInput: Component<{
     if (key == "Enter") {
       event.preventDefault();
       event.currentTarget.blur();
-      return;
-    }
-    if (key == "Backspace") {
-      setRawValue(rawValue().slice(0, -1));
-      return;
-    }
-    if (key === "Escape") {
-      event.preventDefault();
-      setRawValue("");
-      return;
-    }
-    if (key.match(/[^0-9:]/)) {
       return;
     }
   };
