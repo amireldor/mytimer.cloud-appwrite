@@ -54,9 +54,8 @@ export const App: Component = () => {
     if (!registration() || !timers()) {
       return;
     }
-    timers()
-      .filter((t) => t.countUp === false)
-      .forEach(postTimerCreatedToServiceWorker);
+    // calls are idempotent so it's ok to make sure we always have all existing timers
+    timers().forEach(postTimerCreatedToServiceWorker);
   });
 
   createEffect(() => {
@@ -145,6 +144,12 @@ export const App: Component = () => {
               </mark>{" "}
               Please bookmark this page along with your session id to not lose
               it :)
+            </p>
+            <p>
+              Remember that your browser has to be opened so timer notifications
+              can pop up. The tab might be closed, but it really depends on the
+              mood of your browser's service worker handling to make sure
+              notifications pop up :)
             </p>
             <InputSection onCreateTimer={onCreateTimer} />
             <BodySection timers={timers()} onDeleteTimer={onDeleteTimer} />
