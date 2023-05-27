@@ -5,6 +5,9 @@ import { TimerType } from "./appwrite/timers";
 let registration: ServiceWorkerRegistration;
 
 export async function registerServiceWorker() {
+  if (!("serviceWorker" in navigator)) {
+    return;
+  }
   registration = await navigator.serviceWorker.register("../../serviceWorker", {
     scope: "/",
   });

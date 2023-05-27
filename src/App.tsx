@@ -51,7 +51,6 @@ export const App: Component = () => {
   );
 
   createEffect(() => {
-    console.count("JACK");
     if (!registration() || !timers()) {
       return;
     }
