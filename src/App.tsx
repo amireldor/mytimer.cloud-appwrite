@@ -72,7 +72,6 @@ export const App: Component = () => {
             .filter((t) => !t.$id.startsWith("optimistic-"))
             .concat(timer)
         );
-        postTimerCreatedToServiceWorker(timer);
       } else if (status === "delete") {
         postTimerDeletedToServiceWorker(timer.$id);
         mutate(timers().filter((t) => t.$id !== timer.$id));
@@ -81,7 +80,6 @@ export const App: Component = () => {
         const updated = timers();
         updated.splice(index, 1, timer);
         mutate([...updated]);
-        postTimerCreatedToServiceWorker(timer);
       }
     });
     return () => {
