@@ -8,9 +8,11 @@ export async function registerServiceWorker() {
   if (!("serviceWorker" in navigator)) {
     return;
   }
-  registration = await navigator.serviceWorker.register("../../serviceWorker", {
-    scope: "/",
-  });
+  registration = await navigator.serviceWorker.register(
+    import.meta.env.MODE === "production"
+      ? "/serviceWorker.js"
+      : "/dev-sw.js?dev-sw"
+  );
   if (registration.installing) {
     console.log("Service worker is installing");
   } else if (registration.waiting) {
@@ -31,7 +33,7 @@ export function postTimerCreatedToServiceWorker(timer: TimerType): void {
   ) {
     return;
   }
-  registration.active?.postMessage({
+  registration?.active?.postMessage({
     type: "timerCreated",
     timerId: timer.$id,
     timestamp: new Date(timer.timestamp),
@@ -42,7 +44,7 @@ export function postTimerCreatedToServiceWorker(timer: TimerType): void {
 export function postTimerDeletedToServiceWorker(
   timerId: TimerType["$id"]
 ): void {
-  registration.active?.postMessage({
+  registration?.active?.postMessage({
     type: "timerDeleted",
     timerId,
   } as ServiceWorkerMessageEvent["data"]);

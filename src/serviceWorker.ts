@@ -1,4 +1,4 @@
-import { ServiceWorkerMessageEvent } from "./src/types";
+import { ServiceWorkerMessageEvent } from "./types";
 
 const timers = new Map<
   string,
