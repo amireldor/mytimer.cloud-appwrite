@@ -25,7 +25,10 @@ export async function registerServiceWorker() {
 }
 
 export function postTimerCreatedToServiceWorker(timer: TimerType): void {
-  if (isBefore(new Date(timer.timestamp), new Date())) {
+  if (
+    timer.countUp === true ||
+    isBefore(new Date(timer.timestamp), new Date())
+  ) {
     return;
   }
   registration.active?.postMessage({
