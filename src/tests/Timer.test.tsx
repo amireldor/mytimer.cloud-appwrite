@@ -10,7 +10,7 @@ test("Timer delete callback is called after confirmation", async () => {
   const timer: TimerType = {
     $id: "1",
     title: "test",
-    timestamp: new Date().toISOString(),
+    timestamp: new Date(),
     countUp: true,
   };
   render(() => <BodySection timers={[timer]} onDeleteTimer={fn} />);
