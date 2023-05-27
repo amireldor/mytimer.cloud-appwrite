@@ -7,5 +7,10 @@
     "jsxImportSource": "solid-js",
     "lib": ["DOM", "ESNext"]
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx"]
+  "include": [
+    "serviceWorker",
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "serviceWorker.ts"
+  ]
 }

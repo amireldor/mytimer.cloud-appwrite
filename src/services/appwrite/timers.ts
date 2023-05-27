@@ -10,7 +10,7 @@ export const VITE_CLEAR_TIMERS_FUNCTION_ID = import.meta.env
 export interface TimerType {
   $id: string;
   title: string;
-  timestamp: Date;
+  timestamp: string;
   countUp: boolean;
 }
 

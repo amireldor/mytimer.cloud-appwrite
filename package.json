@@ -31,6 +31,7 @@
     "@storybook/blocks": "^7.0.17",
     "@storybook/testing-library": "^0.0.14-next.2",
     "@testing-library/user-event": "^14.4.3",
+    "@types/serviceworker": "^0.0.67",
     "autoprefixer": "^10.4.14",
     "husky": "^8.0.3",
     "jsdom": "^22.0.0",

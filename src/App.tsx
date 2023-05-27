@@ -4,6 +4,8 @@ import {
   Switch,
   createEffect,
   createResource,
+  createSignal,
+  onMount,
 } from "solid-js";
 import {
   SessionContext,
@@ -20,8 +22,20 @@ import {
 import { BASE_URL } from "./config.js";
 import { InputSection } from "./components/sections/InputSection.jsx";
 import { BodySection } from "./components/sections/BodySection.jsx";
+import {
+  postTimerCreatedToServiceWorker,
+  postTimerDeletedToServiceWorker,
+  registerServiceWorker,
+} from "./services/serviceWorkerHandler.js";
 
 export const App: Component = () => {
+  const [registration, setRegistration] =
+    createSignal<ServiceWorkerRegistration | null>(null);
+
+  onMount(async () => {
+    setRegistration(await registerServiceWorker());
+  });
+
   const [sessionId] = createResource<string>(async () => {
     return getSessionIdFromURL() ?? (await startNewSession());
   });
@@ -37,20 +51,38 @@ export const App: Component = () => {
   );
 
   createEffect(() => {
+    console.count("JACK");
+    if (!registration() || !timers()) {
+      return;
+    }
+    timers()
+      .filter((t) => t.countUp === false)
+      .forEach(postTimerCreatedToServiceWorker);
+  });
+
+  createEffect(() => {
     const unsubscribe = subscribeToTimers(sessionId(), (timer, status) => {
       if (status === "create") {
+        timers()
+          .filter((t) => t.$id.startsWith("optimistic-"))
+          .forEach((t) => {
+            postTimerDeletedToServiceWorker(t.$id);
+          });
         mutate(
           timers()
             .filter((t) => !t.$id.startsWith("optimistic-"))
             .concat(timer)
         );
+        postTimerCreatedToServiceWorker(timer);
       } else if (status === "delete") {
+        postTimerDeletedToServiceWorker(timer.$id);
         mutate(timers().filter((t) => t.$id !== timer.$id));
       } else if (status === "update") {
         const index = timers().findIndex((t) => t.$id === timer.$id);
         const updated = timers();
         updated.splice(index, 1, timer);
         mutate([...updated]);
+        postTimerCreatedToServiceWorker(timer);
       }
     });
     return () => {
@@ -82,11 +114,25 @@ export const App: Component = () => {
     }
   };
 
+  const [permission, setPermission] = createSignal(Notification.permission);
+
+  const allowNotifications = async () => {
+    setPermission(await Notification.requestPermission());
+  };
+
   return (
     <div class="text-secondary p-1 md:py-2 md:px-4">
       <h1 class="text-5xl font-bold text-primary mb-4">
         <a href={BASE_URL}>mytimer.cloud</a>
       </h1>
+      {permission() === "default" && (
+        <button
+          class="my-2 border-success text-success"
+          onClick={allowNotifications}
+        >
+          <small>Allow notifications</small>
+        </button>
+      )}
       <SessionContext.Provider value={sessionId}>
         <Switch>
           <Match when={sessionId.loading}>
